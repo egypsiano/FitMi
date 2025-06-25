@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - FitMi{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Dashboard</h1>
+    <p class="lead">Welcome, {{ current_user.username }}!</p>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Your Stats</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Weight: <span class="font-weight-bold">(to be implemented)</span></li>
+                        <li class="list-group-item">Height: <span class="font-weight-bold">(to be implemented)</span></li>
+                        <li class="list-group-item">BMI: <span class="font-weight-bold">(to be implemented)</span></li>
+                        <li class="list-group-item">BMR: <span class="font-weight-bold">(to be implemented)</span></li>
+                        <li class="list-group-item">Daily Calorie Goal: <span class="font-weight-bold">(to be implemented)</span></li>
+                        <li class="list-group-item">Fat Percentage: <span class="font-weight-bold">(to be implemented)</span></li>
+                    </ul>
+                    <a href="#" class="btn btn-primary mt-3">Update Profile</a> {# Link to future profile edit page #}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Actions</h5>
+                    <a href="#" class="btn btn-success btn-block mb-2">Log Workout</a> {# Link to future log workout page #}
+                    <a href="#" class="btn btn-info btn-block mb-2">Log Meal</a> {# Link to future log meal page #}
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary btn-block">View Workouts</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <h4>Recent Activity (Placeholder)</h4>
+            <p>No recent activity logged.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

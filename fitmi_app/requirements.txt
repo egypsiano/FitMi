@@ -1,11 +1,11 @@
-Flask==2.0.1 # Using a slightly older version for broader compatibility, will update if needed.
-Werkzeug<2.1 # Pinning Werkzeug to a version compatible with Flask 2.0.1
+Flask>=2.2,<2.3 # Upgrading Flask for Flask-SQLAlchemy 3.x compatibility
+# Werkzeug<2.1 # Removing pin, let Flask manage this for now
 requests # For making HTTP requests to external APIs (MuscleWiki, MyFitnessPal, Calculator.net)
 beautifulsoup4 # For parsing HTML content if direct APIs are not available
 psycopg2-binary # Assuming PostgreSQL, change if using MySQL or SQLite
 WTForms # For creating forms
 Flask-WTF # For integrating WTForms with Flask
-Flask-SQLAlchemy # For database ORM
+Flask-SQLAlchemy>=3.0,<3.2 # For SQLAlchemy 2.x compatibility
 Flask-Migrate # For database migrations
 Flask-Login # For user session management
 bcrypt # For password hashing

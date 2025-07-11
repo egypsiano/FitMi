@@ -1,0 +1,248 @@
+/* Basic styles for FitPal */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+nav ul {
+    padding: 0;
+    list-style: none;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+main {
+    padding: 20px;
+    min-height: 70vh; /* Ensure footer is pushed down */
+}
+
+main h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #333;
+    color: #fff;
+    margin-top: 20px;
+}
+
+/* Workout and Exercise Styling */
+.workout-routine {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.workout-routine h3 {
+    color: #007bff; /* A primary blue color */
+    margin-top: 0;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.exercise {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+.exercise:first-of-type {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.exercise h4 {
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.exercise p {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.media-placeholders {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    gap: 20px; /* Space between items */
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+}
+
+.media-placeholders > div {
+    flex: 1; /* Allow items to grow and shrink */
+    min-width: 280px; /* Minimum width before wrapping */
+}
+
+.media-placeholders p {
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.exercise-animation,
+.exercise-video {
+    width: 100%; /* Make media responsive within its container */
+    max-width: 320px; /* Max width for consistency */
+    height: auto; /* Maintain aspect ratio */
+    border: 2px solid #007bff;
+    background-color: #e9ecef;
+    display: block; /* Remove extra space below img/video */
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.exercise-animation::before {
+    content: "Animated GIF Placeholder";
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 180px; /* Approximate height */
+    color: #007bff;
+    font-style: italic;
+}
+
+.exercise-video::before {
+    content: "Video Placeholder";
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 240px; /* Given height in HTML */
+    color: #007bff;
+    font-style: italic;
+}
+
+
+/* Fat Loss Program and Diet Plan Styling */
+.fat-loss-program {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.fat-loss-program h3 {
+    color: #28a745; /* A primary green color */
+    margin-top: 0;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.diet-plan {
+    border: 1px solid #e7e7e7;
+    background-color: #fdfdfd;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.diet-plan h4 {
+    color: #5a5a5a;
+    margin-top: 0;
+    font-size: 1.3rem;
+}
+
+.diet-plan h5 {
+    color: #333;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.diet-plan ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.diet-plan ul li {
+    margin-bottom: 5px;
+}
+
+.sample-meal-plan {
+    background-color: #f9f9f9;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.sample-meal-plan p {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.sample-meal-plan p strong {
+    color: #007bff;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    nav ul li {
+        display: block;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    nav ul li:last-child {
+        margin-bottom: 0;
+    }
+
+    .media-placeholders {
+        flex-direction: column; /* Stack media items vertically on small screens */
+    }
+
+    .media-placeholders > div {
+        min-width: 100%; /* Allow them to take full width */
+    }
+}

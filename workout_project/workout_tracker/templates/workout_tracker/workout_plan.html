@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ workout_plan.name }}</title>
+</head>
+<body>
+    <h1>{{ workout_plan.name }}</h1>
+    <p>{{ workout_plan.description }}</p>
+
+    <h2>Exercises</h2>
+    <ul>
+        {% for plan_exercise in plan_exercises %}
+            <li>
+                <h3>{{ plan_exercise.exercise.name }}</h3>
+                <p>{{ plan_exercise.exercise.description }}</p>
+                <p>Sets: {{ plan_exercise.sets }}</p>
+                <p>Reps: {{ plan_exercise.reps }}</p>
+                <p>Rest: {{ plan_exercise.rest_period }} seconds</p>
+                {% if plan_exercise.exercise.video_url %}
+                    <a href="{{ plan_exercise.exercise.video_url }}" target="_blank">Watch Video</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

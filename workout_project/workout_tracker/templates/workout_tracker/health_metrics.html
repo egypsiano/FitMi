@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Health Metrics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Health Metrics</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Metrics</button>
+    </form>
+
+    <h2>Metrics History</h2>
+    <canvas id="healthChart" width="400" height="200"></canvas>
+
+    {% if weekly_update %}
+    <h2>Weekly Update</h2>
+    <p>{{ weekly_update }}</p>
+    {% endif %}
+
+    <script>
+        var ctx = document.getElementById('healthChart').getContext('2d');
+        var healthChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [{% for metric in health_metrics %}"{{ metric.date }}",{% endfor %}],
+                datasets: [
+                    {
+                        label: 'Weight',
+                        data: [{% for metric in health_metrics %}{{ metric.weight }},{% endfor %}],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Body Fat %',
+                        data: [{% for metric in health_metrics %}{{ metric.body_fat_percentage }},{% endfor %}],
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'BMI',
+                        data: [{% for metric in health_metrics %}{{ metric.bmi }},{% endfor %}],
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Skeletal Muscle %',
+                        data: [{% for metric in health_metrics %}{{ metric.skeletal_muscle_percentage }},{% endfor %}],
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Muscle Mass (kg)',
+                        data: [{% for metric in health_metrics %}{{ metric.muscle_mass }},{% endfor %}],
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

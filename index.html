@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health & Fitness Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .exercise-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .file-upload {
+            position: relative;
+            display: inline-block;
+        }
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        .upload-label {
+            padding: 8px 12px;
+            background-color: #f3f4f6;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+    <div class="drawer drawer-mobile">
+        <input id="drawer-menu" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content flex flex-col">
+            <!-- Navbar -->
+            <div class="navbar bg-base-100 shadow-md">
+                <div class="flex-1 px-2">
+                    <label for="drawer-menu" class="btn btn-ghost btn-circle lg:hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                    </label>
+                    <span class="text-lg font-bold">Health & Fitness Tracker</span>
+                </div>
+                <div class="flex-none">
+                    <button class="btn btn-ghost btn-circle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM9 7H4l5-5v5z" /></svg>
+                    </button>
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                            <div class="w-10 rounded-full">
+                                <img src="https://placehold.co/40" />
+                            </div>
+                        </label>
+                        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                            <li><a href="#">Profile</a></li>
+                            <li><a href="#">Settings</a></li>
+                            <li><a href="#">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Main Content -->
+            <main class="flex-1 p-4 md:p-6">
+                <!-- Tabs -->
+                <div class="tabs tabs-lifted">
+                    <a class="tab tab-active" onclick="changeTab('dashboard')">Dashboard</a>
+                    <a class="tab" onclick="changeTab('health')">Health Tracker</a>
+                    <a class="tab" onclick="changeTab('workout')">Workout Tracker</a>
+                    <a class="tab" onclick="changeTab('exercises')">Exercises</a>
+                </div>
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content active">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                        <!-- Health Summary Card -->
+                        <div class="card bg-base-100 shadow-xl">
+                            <div class="card-body">
+                                <h2 class="card-title">Today's Health Summary</h2>
+                                <div class="mt-4 space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-sm opacity-70">Weight</span>
+                                        <span class="font-medium">75.2 kg</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm opacity-70">Body Fat %</span>
+                                        <span class="font-medium">18.5%</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm opacity-70">BMI</span>
+                                        <span class="font-medium">24.1</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm opacity-70">Muscle Mass</span>
+                                        <span class="font-medium">32.1 kg</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm opacity-70">BMR</span>
+                                        <span class="font-medium">1,850 kcal</span>
+                                    </div>
+                                </div>
+                                <div class="card-actions justify-end mt-4">
+                                    <button class="btn btn-primary btn-sm" onclick="changeTab('health')">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Workout Summary Card -->
+                        <div class="card bg-base-100 shadow-xl">
+                            <div class="card-body">
+                                <h2 class="card-title">Today's Workout</h2>
+                                <div class="mt-4 space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-sm opacity-70">Routine</span>
+                                        <span class="font-medium">Upper Body</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm opacity-70">Exercises</span>
+                                        <span class="font-medium">6</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm opacity-70">Sets</span>
+                                        <span class="font-medium">18</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm opacity-70">Duration</span>
+                                        <span class="font-medium">45 min</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm opacity-70">Calories Burned</span>
+                                        <span class="font-medium">320 kcal</span>
+                                    </div>
+                                </div>
+                                <div class="card-actions justify-end mt-4">
+                                    <button class="btn btn-primary btn-sm" onclick="changeTab('workout')">Log Workout</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Progress Chart -->
+                        <div class="card bg-base-100 shadow-xl col-span-1 md:col-span-2 lg:col-span-1">
+                            <div class="card-body">
+                                <h2 class="card-title">Weight Progress</h2>
+                                <div class="chart-container mt-4">
+                                    <canvas id="weightChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Recent Activities -->
+                    <div class="mt-8">
+                        <h2 class="text-xl font-semibold mb-4">Recent Activities</h2>
+                        <div class="overflow-x-auto">
+                            <table class="table w-full">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Activity</th>
+                                        <th>Details</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2023-07-15</td>
+                                        <td>Upper Body Workout</td>
+                                        <td>6 exercises, 18 sets</td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2023-07-14</td>
+                                        <td>Health Measurement</td>
+                                        <td>Weight: 75.2kg, BF: 18.5%</td>
+                                        <td><span class="badge badge-success">Recorded</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2023-07-13</td>
+                                        <td>Lower Body Workout</td>
+                                        <td>7 exercises, 21 sets</td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2023-07-12</td>
+                                        <td>Health Measurement</td>
+                                        <td>Weight: 75.8kg, BF: 19.1%</td>
+                                        <td><span class="badge badge-success">Recorded</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Health Tracker Tab -->
+                <div id="health" class="tab-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                        <!-- Health Form -->
+                        <div class="card bg-base-100 shadow-xl lg:col-span-1">
+                            <div class="card-body">
+                                <h2 class="card-title">Add Health Measurement</h2>
+                                <form id="healthForm" class="mt-4 space-y-4">
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Date</span>
+                                        </label>
+                                        <input type="date" id="healthDate" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Weight (kg)</span>
+                                        </label>
+                                        <input type="number" id="weight" step="0.1" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Body Fat %</span>
+                                        </label>
+                                        <input type="number" id="bodyFat" step="0.1" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">BMI</span>
+                                        </label>
+                                        <input type="number" id="bmi" step="0.1" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Skeletal Muscle %</span>
+                                        </label>
+                                        <input type="number" id="skeletalMuscle" step="0.1" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Muscle Mass (kg)</span>
+                                        </label>
+                                        <input type="number" id="muscleMass" step="0.1" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Protein %</span>
+                                        </label>
+                                        <input type="number" id="protein" step="0.1" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">BMR (kcal)</span>
+                                        </label>
+                                        <input type="number" id="bmr" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Fat-free Body Weight (kg)</span>
+                                        </label>
+                                        <input type="number" id="fatFreeWeight" step="0.1" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Subcutaneous Fat %</span>
+                                        </label>
+                                        <input type="number" id="subcutaneousFat" step="0.1" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Visceral Fat</span>
+                                        </label>
+                                        <input type="number" id="visceralFat" step="0.1" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Body Water %</span>
+                                        </label>
+                                        <input type="number" id="bodyWater" step="0.1" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Bone Mass (kg)</span>
+                                        </label>
+                                        <input type="number" id="boneMass" step="0.1" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Body Type</span>
+                                        </label>
+                                        <select id="bodyType" class="select select-bordered">
+                                            <option value="endomorph">Endomorph</option>
+                                            <option value="mesomorph">Mesomorph</option>
+                                            <option value="ectomorph">Ectomorph</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Metabolic Age</span>
+                                        </label>
+                                        <input type="number" id="metabolicAge" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Blood Sugar (Fasting)</span>
+                                        </label>
+                                        <input type="number" id="bloodSugar" class="input input-bordered" required>
+                                    </div>
+                                    <div class="card-actions mt-4">
+                                        <button type="submit" class="btn btn-primary">Save Measurement</button>
+                                        <button type="button" class="btn btn-ghost" onclick="resetHealthForm()">Reset</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- Health Charts -->
+                        <div class="card bg-base-100 shadow-xl lg:col-span-2">
+                            <div class="card-body">
+                                <h2 class="card-title">Health Trends</h2>
+                                <div class="tabs tabs-boxed mt-4">
+                                    <a class="tab tab-active" onclick="changeHealthChart('weight', this)">Weight</a>
+                                    <a class="tab" onclick="changeHealthChart('bodyFat', this)">Body Fat</a>
+                                    <a class="tab" onclick="changeHealthChart('muscle', this)">Muscle Mass</a>
+                                    <a class="tab" onclick="changeHealthChart('bmi', this)">BMI</a>
+                                </div>
+                                <div class="chart-container mt-4">
+                                    <canvas id="healthTrendChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Health Records Table -->
+                    <div class="card bg-base-100 shadow-xl mt-6">
+                        <div class="card-body">
+                            <h2 class="card-title">Health Records</h2>
+                            <div class="overflow-x-auto mt-4">
+                                <table class="table w-full">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Weight (kg)</th>
+                                            <th>Body Fat %</th>
+                                            <th>BMI</th>
+                                            <th>Muscle Mass (kg)</th>
+                                            <th>BMR (kcal)</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="healthRecordsBody">
+                                        <tr>
+                                            <td>2023-07-15</td>
+                                            <td>75.2</td>
+                                            <td>18.5</td>
+                                            <td>24.1</td>
+                                            <td>32.1</td>
+                                            <td>1,850</td>
+                                            <td>
+                                                <button class="btn btn-ghost btn-xs">Edit</button>
+                                                <button class="btn btn-ghost btn-xs text-error">Delete</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2023-07-12</td>
+                                            <td>75.8</td>
+                                            <td>19.1</td>
+                                            <td>24.3</td>
+                                            <td>31.8</td>
+                                            <td>1,840</td>
+                                            <td>
+                                                <button class="btn btn-ghost btn-xs">Edit</button>
+                                                <button class="btn btn-ghost btn-xs text-error">Delete</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2023-07-08</td>
+                                            <td>76.1</td>
+                                            <td>19.5</td>
+                                            <td>24.5</td>
+                                            <td>31.5</td>
+                                            <td>1,835</td>
+                                            <td>
+                                                <button class="btn btn-ghost btn-xs">Edit</button>
+                                                <button class="btn btn-ghost btn-xs text-error">Delete</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Workout Tracker Tab -->
+                <div id="workout" class="tab-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                        <!-- Workout Form -->
+                        <div class="card bg-base-100 shadow-xl lg:col-span-1">
+                            <div class="card-body">
+                                <h2 class="card-title">Log Workout</h2>
+                                <form id="workoutForm" class="mt-4 space-y-4">
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Date</span>
+                                        </label>
+                                        <input type="date" id="workoutDate" class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Routine</span>
+                                        </label>
+                                        <select id="routine" class="select select-bordered" onchange="loadExercises()">
+                                            <option value="upper">Upper Body</option>
+                                            <option value="lower">Lower Body</option>
+                                            <option value="full">Full Body</option>
+                                            <option value="push">Push</option>
+                                            <option value="pull">Pull</option>
+                                            <option value="legs">Legs</option>
+                                        </select>
+                                    </div>
+                                    <div id="exercisesContainer">
+                                        <!-- Exercises will be dynamically added here -->
+                                        <div class="exercise-group mb-6 p-4 bg-base-200 rounded-lg">
+                                            <div class="flex justify-between items-center mb-3">
+                                                <h3 class="font-medium">Bench Press</h3>
+                                                <button type="button" class="btn btn-ghost btn-xs" onclick="removeExercise(this)">Remove</button>
+                                            </div>
+                                            <div class="grid grid-cols-3 gap-2">
+                                                <div class="form-control">
+                                                    <label class="label">
+                                                        <span class="label-text text-xs">Sets</span>
+                                                    </label>
+                                                    <input type="number" class="input input-bordered input-sm" value="3" min="1">
+                                                </div>
+                                                <div class="form-control">
+                                                    <label class="label">
+                                                        <span class="label-text text-xs">Reps</span>
+                                                    </label>
+                                                    <input type="number" class="input input-bordered input-sm" value="10" min="1">
+                                                </div>
+                                                <div class="form-control">
+                                                    <label class="label">
+                                                        <span class="label-text text-xs">Weight (kg)</span>
+                                                    </label>
+                                                    <input type="number" class="input input-bordered input-sm" value="60" step="2.5">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="exercise-group mb-6 p-4 bg-base-200 rounded-lg">
+                                            <div class="flex justify-between items-center mb-3">
+                                                <h3 class="font-medium">Overhead Press</h3>
+                                                <button type="button" class="btn btn-ghost btn-xs" onclick="removeExercise(this)">Remove</button>
+                                            </div>
+                                            <div class="grid grid-cols-3 gap-2">
+                                                <div class="form-control">
+                                                    <label class="label">
+                                                        <span class="label-text text-xs">Sets</span>
+                                                    </label>
+                                                    <input type="number" class="input input-bordered input-sm" value="3" min="1">
+                                                </div>
+                                                <div class="form-control">
+                                                    <label class="label">
+                                                        <span class="label-text text-xs">Reps</span>
+                                                    </label>
+                                                    <input type="number" class="input input-bordered input-sm" value="8" min="1">
+                                                </div>
+                                                <div class="form-control">
+                                                    <label class="label">
+                                                        <span class="label-text text-xs">Weight (kg)</span>
+                                                    </label>
+                                                    <input type="number" class="input input-bordered input-sm" value="40" step="2.5">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Duration (minutes)</span>
+                                        </label>
+                                        <input type="number" id="duration" class="input input-bordered" value="45" min="1">
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Notes</span>
+                                        </label>
+                                        <textarea id="workoutNotes" class="textarea textarea-bordered" rows="3"></textarea>
+                                    </div>
+                                    <div class="card-actions mt-4">
+                                        <button type="button" class="btn btn-outline btn-sm" onclick="addExercise()">Add Exercise</button>
+                                        <button type="submit" class="btn btn-primary">Save Workout</button>
+                                        <button type="button" class="btn btn-ghost" onclick="resetWorkoutForm()">Reset</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- Workout Charts -->
+                        <div class="card bg-base-100 shadow-xl lg:col-span-2">
+                            <div class="card-body">
+                                <h2 class="card-title">Workout Progress</h2>
+                                <div class="tabs tabs-boxed mt-4">
+                                    <a class="tab tab-active" onclick="changeWorkoutChart('upper', this)">Upper Body</a>
+                                    <a class="tab" onclick="changeWorkoutChart('lower', this)">Lower Body</a>
+                                    <a class="tab" onclick="changeWorkoutChart('volume', this)">Training Volume</a>
+                                    <a class="tab" onclick="changeWorkoutChart('frequency', this)">Workout Frequency</a>
+                                </div>
+                                <div class="chart-container mt-4">
+                                    <canvas id="workoutProgressChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Workout Records Table -->
+                    <div class="card bg-base-100 shadow-xl mt-6">
+                        <div class="card-body">
+                            <h2 class="card-title">Workout History</h2>
+                            <div class="overflow-x-auto mt-4">
+                                <table class="table w-full">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Routine</th>
+                                            <th>Exercises</th>
+                                            <th>Duration</th>
+                                            <th>Volume (kg)</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="workoutRecordsBody">
+                                        <tr>
+                                            <td>2023-07-15</td>
+                                            <td>Upper Body</td>
+                                            <td>6</td>
+                                            <td>45 min</td>
+                                            <td>1,850</td>
+                                            <td>
+                                                <button class="btn btn-ghost btn-xs">View</button>
+                                                <button class="btn btn-ghost btn-xs text-error">Delete</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2023-07-13</td>
+                                            <td>Lower Body</td>
+                                            <td>7</td>
+                                            <td>50 min</td>
+                                            <td>2,100</td>
+                                            <td>
+                                                <button class="btn btn-ghost btn-xs">View</button>
+                                                <button class="btn btn-ghost btn-xs text-error">Delete</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2023-07-10</td>
+                                            <td>Upper Body</td>
+                                            <td>5</td>
+                                            <td>40 min</td>
+                                            <td>1,650</td>
+                                            <td>
+                                                <button class="btn btn-ghost btn-xs">View</button>
+                                                <button class="btn btn-ghost btn-xs text-error">Delete</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Exercises Tab -->
+                <div id="exercises" class="tab-content">
+                    <div class="flex justify-between items-center mt-6 mb-4">
+                        <h2 class="text-2xl font-bold">Exercise Library</h2>
+                        <button class="btn btn-primary" onclick="openAddExerciseModal()">Add Exercise</button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Exercise Cards -->
+                        <div class="exercise-card card bg-base-100 shadow-xl">
+                            <figure>
+                                <img src="https://placehold.co/300x200/4f46e5/ffffff?text=Bench+Press" alt="Bench Press" class="w-full h-48 object-cover">
+                            </figure>
+                            <div class="card-body">
+                                <h2 class="card-title">Bench Press</h2>
+                                <p class="text-sm opacity-70">Chest, Shoulders, Triceps</p>
+                                <p class="text-sm mt-2">The bench press is a weight training exercise that involves lying on a bench and pushing a weight upwards with your arms.</p>
+                                <div class="card-actions justify-end mt-4">
+                                    <button class="btn btn-outline btn-sm" onclick="openExerciseModal('bench-press')">View Details</button>
+                                    <button class="btn btn-ghost btn-sm" onclick="editExercise('bench-press')">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="exercise-card card bg-base-100 shadow-xl">
+                            <figure>
+                                <img src="https://placehold.co/300x200/059669/ffffff?text=Squat" alt="Squat" class="w-full h-48 object-cover">
+                            </figure>
+                            <div class="card-body">
+                                <h2 class="card-title">Barbell Squat</h2>
+                                <p class="text-sm opacity-70">Quadriceps, Glutes, Hamstrings</p>
+                                <p class="text-sm mt-2">The barbell back squat is a compound movement that works the entire lower body and core.</p>
+                                <div class="card-actions justify-end mt-4">
+                                    <button class="btn btn-outline btn-sm" onclick="openExerciseModal('squat')">View Details</button>
+                                    <button class="btn btn-ghost btn-sm" onclick="editExercise('squat')">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="exercise-card card bg-base-100 shadow-xl">
+                            <figure>
+                                <img src="https://placehold.co/300x200/dc2626/ffffff?text=Deadlift" alt="Deadlift" class="w-full h-48 object-cover">
+                            </figure>
+                            <div class="card-body">
+                                <h2 class="card-title">Deadlift</h2>
+                                <p class="text-sm opacity-70">Back, Glutes, Hamstrings</p>
+                                <p class="text-sm mt-2">The deadlift is a weight training exercise in which a loaded barbell is lifted off the ground to the level of the hips.</p>
+                                <div class="card-actions justify-end mt-4">
+                                    <button class="btn btn-outline btn-sm" onclick="openExerciseModal('deadlift')">View Details</button>
+                                    <button class="btn btn-ghost btn-sm" onclick="editExercise('deadlift')">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="exercise-card card bg-base-100 shadow-xl">
+                            <figure>
+                                <img src="https://placehold.co/300x200/7c3aed/ffffff?text=Overhead+Press" alt="Overhead Press" class="w-full h-48 object-cover">
+                            </figure>
+                            <div class="card-body">
+                                <h2 class="card-title">Overhead Press</h2>
+                                <p class="text-sm opacity-70">Shoulders, Triceps</p>
+                                <p class="text-sm mt-2">The overhead press is a strength training exercise that involves pressing a weight overhead from shoulder height.</p>
+                                <div class="card-actions justify-end mt-4">
+                                    <button class="btn btn-outline btn-sm" onclick="openExerciseModal('overhead-press')">View Details</button>
+                                    <button class="btn btn-ghost btn-sm" onclick="editExercise('overhead-press')">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="exercise-card card bg-base-100 shadow-xl">
+                            <figure>
+                                <img src="https://placehold.co/300x200/ea580c/ffffff?text=Pull+Up" alt="Pull Up" class="w-full h-48 object-cover">
+                            </figure>
+                            <div class="card-body">
+                                <h2 class="card-title">Pull Up</h2>
+                                <p class="text-sm opacity-70">Back, Biceps</p>
+                                <p class="text-sm mt-2">The pull-up is a closed-chain bodyweight exercise where the body is suspended by the hands and pulls up.</p>
+                                <div class="card-actions justify-end mt-4">
+                                    <button class="btn btn-outline btn-sm" onclick="openExerciseModal('pull-up')">View Details</button>
+                                    <button class="btn btn-ghost btn-sm" onclick="editExercise('pull-up')">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="exercise-card card bg-base-100 shadow-xl">
+                            <figure>
+                                <img src="https://placehold.co/300x200/0891b2/ffffff?text=Bent+Over+Row" alt="Bent Over Row" class="w-full h-48 object-cover">
+                            </figure>
+                            <div class="card-body">
+                                <h2 class="card-title">Bent Over Row</h2>
+                                <p class="text-sm opacity-70">Back, Biceps</p>
+                                <p class="text-sm mt-2">The bent-over row is a strength training exercise that targets the back and biceps muscles.</p>
+                                <div class="card-actions justify-end mt-4">
+                                    <button class="btn btn-outline btn-sm" onclick="openExerciseModal('bent-over-row')">View Details</button>
+                                    <button class="btn btn-ghost btn-sm" onclick="editExercise('bent-over-row')">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <!-- Sidebar -->
+        <div class="drawer-side">
+            <label for="drawer-menu" class="drawer-overlay"></label>
+            <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+                <li class="mb-4">
+                    <h2 class="text-xl font-bold">Health & Fitness Tracker</h2>
+                </li>
+                <li><a onclick="changeTab('dashboard')">Dashboard</a></li>
+                <li><a onclick="changeTab('health')">Health Tracker</a></li>
+                <li><a onclick="changeTab('workout')">Workout Tracker</a></li>
+                <li><a onclick="changeTab('exercises')">Exercises</a></li>
+                <div class="divider"></div>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Settings</a></li>
+                <li><a href="#">Help & Support</a></li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Add Exercise Modal -->
+    <input type="checkbox" id="addExerciseModal" class="modal-toggle" />
+    <div class="modal">
+        <div class="modal-box max-w-3xl">
+            <h3 class="font-bold text-lg mb-4">Add New Exercise</h3>
+            <form id="exerciseForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Exercise Name</span>
+                        </label>
+                        <input type="text" id="exerciseName" class="input input-bordered" required>
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Target Muscle Group</span>
+                        </label>
+                        <select id="muscleGroup" class="select select-bordered" multiple>
+                            <option value="chest">Chest</option>
+                            <option value="back">Back</option>
+                            <option value="shoulders">Shoulders</option>
+                            <option value="arms">Arms</option>
+                            <option value="legs">Legs</option>
+                            <option value="core">Core</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Exercise Type</span>
+                    </label>
+                    <select id="exerciseType" class="select select-bordered">
+                        <option value="compound">Compound</option>
+                        <option value="isolation">Isolation</option>
+                        <option value="accessory">Accessory</option>
+                    </select>
+                </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Equipment</span>
+                    </label>
+                    <select id="equipment" class="select select-bordered" multiple>
+                        <option value="barbell">Barbell</option>
+                        <option value="dumbbell">Dumbbell</option>
+                        <option value="machine">Machine</option>
+                        <option value="bodyweight">Bodyweight</option>
+                        <option value="cable">Cable</option>
+                        <option value="kettlebell">Kettlebell</option>
+                    </select>
+                </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Difficulty Level</span>
+                    </label>
+                    <select id="difficulty" class="select select-bordered">
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Description</span>
+                    </label>
+                    <textarea id="description" class="textarea textarea-bordered" rows="4" placeholder="Describe the proper form and technique for this exercise..."></textarea>
+                </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Primary Benefits</span>
+                    </label>
+                    <textarea id="benefits" class="textarea textarea-bordered" rows="3" placeholder="List the main benefits of this exercise..."></textarea>
+                </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Common Mistakes</span>
+                    </label>
+                    <textarea id="mistakes" class="textarea textarea-bordered" rows="3" placeholder="List common mistakes to avoid..."></textarea>
+                </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Attachments</span>
+                    </label>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2">
+                            <div class="file-upload">
+                                <label class="upload-label">Upload Image</label>
+                                <input type="file" accept="image/*" multiple>
+                            </div>
+                            <div class="file-upload">
+                                <label class="upload-label">Upload Video</label>
+                                <input type="file" accept="video/*" multiple>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="url" placeholder="Add video URL (YouTube, etc.)" class="input input-bordered flex-1">
+                            <button type="button" class="btn btn-outline btn-sm">Add</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="url" placeholder="Add reference link" class="input input-bordered flex-1">
+                            <button type="button" class="btn btn-outline btn-sm">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-action">
+                    <label for="addExerciseModal" class="btn btn-ghost">Cancel</label>
+                    <button type="submit" class="btn btn-primary">Add Exercise</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Exercise Detail Modal -->
+    <input type="checkbox" id="exerciseDetailModal" class="modal-toggle" />
+    <div class="modal">
+        <div class="modal-box max-w-4xl">
+            <h3 class="font-bold text-lg mb-4">Exercise Details</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                    <img src="https://placehold.co/400x300/4f46e5/ffffff?text=Exercise+Demo" alt="Exercise Demo" class="w-full rounded-lg mb-4">
+                    <div class="carousel w-full">
+                        <div id="slide1" class="carousel-item w-full">
+                            <img src="https://placehold.co/400x200/6366f1/ffffff?text=Step+1" class="w-full" />
+                        </div>
+                        <div id="slide2" class="carousel-item w-full">
+                            <img src="https://placehold.co/400x200/8b5cf6/ffffff?text=Step+2" class="w-full" />
+                        </div>
+                        <div id="slide3" class="carousel-item w-full">
+                            <img src="https://placehold.co/400x200/06b6d4/ffffff?text=Step+3" class="w-full" />
+                        </div>
+                    </div>
+                    <div class="flex justify-center w-full py-2 gap-2">
+                        <a href="#slide1" class="btn btn-xs">1</a>
+                        <a href="#slide2" class="btn btn-xs">2</a>
+                        <a href="#slide3" class="btn btn-xs">3</a>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">Bench Press</h2>
+                    <div class="mb-4">
+                        <span class="badge badge-primary">Chest</span>
+                        <span class="badge badge-secondary">Shoulders</span>
+                        <span class="badge badge-accent">Triceps</span>
+                        <span class="badge">Compound</span>
+                        <span class="badge">Barbell</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold mb-2">Description</h3>
+                            <p>The bench press is a weight training exercise that involves lying on a bench and pushing a weight upwards with your arms. It primarily works the pectoralis major muscle as well as the anterior deltoids, and triceps.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-2">Primary Benefits</h3>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Builds upper body strength</li>
+                                <li>Increases chest muscle mass</li>
+                                <li>Improves pushing power</li>
+                                <li>Enhances shoulder stability</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-2">Proper Form</h3>
+                            <ol class="list-decimal list-inside space-y-1">
+                                <li>Lie on bench with eyes under the bar</li>
+                                <li>Grip slightly wider than shoulder width</li>
+                                <li>Retract shoulder blades and arch slightly</li>
+                                <li>Lower bar to mid-chest with control</li>
+                                <li>Press bar back up in a slight arch</li>
+                            </ol>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-2">Common Mistakes</h3>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Bouncing the bar off the chest</li>
+                                <li>Lifting hips off the bench</li>
+                                <li>Flaring elbows excessively</li>
+                                <li>Not using a full range of motion</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-2">Related Videos</h3>
+                            <div class="space-y-2">
+                                <a href="#" class="flex items-center gap-2 p-2 bg-base-200 rounded hover:bg-base-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>How to Bench Press with Perfect Form</span>
+                                </a>
+                                <a href="#" class="flex items-center gap-2 p-2 bg-base-200 rounded hover:bg-base-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>Bench Press Variations for Muscle Growth</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-2">References</h3>
+                            <div class="space-y-2">
+                                <a href="#" class="flex items-center gap-2 p-2 bg-base-200 rounded hover:bg-base-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                    </svg>
+                                    <span>Journal of Strength and Conditioning Research</span>
+                                </a>
+                                <a href="#" class="flex items-center gap-2 p-2 bg-base-200 rounded hover:bg-base-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                    </svg>
+                                    <span>ACSM Guidelines for Exercise Testing</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-action">
+                <label for="exerciseDetailModal" class="btn btn-ghost">Close</label>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Tab switching functionality
+        function changeTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            // Update tab buttons
+            document.querySelectorAll('.tabs a').forEach(tab => {
+                tab.classList.remove('tab-active');
+            });
+            // Find the clicked tab button and make it active
+            const tabs = document.querySelectorAll('.tabs a');
+            for (let tab of tabs) {
+                if (tab.onclick.toString().includes(tabId)) {
+                    tab.classList.add('tab-active');
+                    break;
+                }
+            }
+            // Close mobile drawer
+            document.getElementById('drawer-menu').checked = false;
+        }
+        // Health Chart functionality
+        let healthTrendChart;
+        function initHealthChart() {
+            const ctx = document.getElementById('healthTrendChart').getContext('2d');
+            healthTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jul 1', 'Jul 4', 'Jul 7', 'Jul 10', 'Jul 13', 'Jul 15'],
+                    datasets: [{
+                        label: 'Weight (kg)',
+                        data: [76.5, 76.3, 76.1, 75.8, 75.5, 75.2],
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        }
+        function changeHealthChart(chartType, element) {
+            let data, label, color;
+            switch(chartType) {
+                case 'weight':
+                    data = [76.5, 76.3, 76.1, 75.8, 75.5, 75.2];
+                    label = 'Weight (kg)';
+                    color = '#4f46e5';
+                    break;
+                case 'bodyFat':
+                    data = [19.8, 19.6, 19.4, 19.2, 18.8, 18.5];
+                    label = 'Body Fat %';
+                    color = '#059669';
+                    break;
+                case 'muscle':
+                    data = [31.2, 31.4, 31.6, 31.7, 31.9, 32.1];
+                    label = 'Muscle Mass (kg)';
+                    color = '#dc2626';
+                    break;
+                case 'bmi':
+                    data = [24.8, 24.7, 24.6, 24.5, 24.3, 24.1];
+                    label = 'BMI';
+                    color = '#7c3aed';
+                    break;
+                default:
+                    data = [76.5, 76.3, 76.1, 75.8, 75.5, 75.2];
+                    label = 'Weight (kg)';
+                    color = '#4f46e5';
+            }
+            healthTrendChart.data.datasets[0].data = data;
+            healthTrendChart.data.datasets[0].label = label;
+            healthTrendChart.data.datasets[0].borderColor = color;
+            healthTrendChart.data.datasets[0].backgroundColor = color + '20'; // Add transparency
+            healthTrendChart.update();
+            // Update active tab
+            document.querySelectorAll('.tabs-boxed a').forEach(tab => {
+                tab.classList.remove('tab-active');
+            });
+            element.classList.add('tab-active');
+        }
+        // Workout Chart functionality
+        let workoutProgressChart;
+        function initWorkoutChart() {
+            const ctx = document.getElementById('workoutProgressChart').getContext('2d');
+            workoutProgressChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jul 1', 'Jul 3', 'Jul 5', 'Jul 8', 'Jul 10', 'Jul 12', 'Jul 15'],
+                    datasets: [{
+                        label: 'Upper Body Volume (kg)',
+                        data: [1200, 1350, 1100, 1400, 1300, 1250, 1850],
+                        backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                        borderColor: '#4f46e5',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Volume (kg)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        function changeWorkoutChart(chartType, element) {
+            let data, label, color;
+            switch(chartType) {
+                case 'upper':
+                    data = [{
+                        label: 'Upper Body Volume (kg)',
+                        data: [1200, 1350, 1100, 1400, 1300, 1250, 1850],
+                        backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                        borderColor: '#4f46e5',
+                        borderWidth: 1
+                    }];
+                    break;
+                case 'lower':
+                    data = [{
+                        label: 'Lower Body Volume (kg)',
+                        data: [1500, 1400, 1600, 1550, 1700, 1650, 2100],
+                        backgroundColor: 'rgba(220, 38, 38, 0.6)',
+                        borderColor: '#dc2626',
+                        borderWidth: 1
+                    }];
+                    break;
+                case 'volume':
+                    data = [
+                        {
+                            label: 'Upper Body',
+                            data: [1200, 1350, 1100, 1400, 1300, 1250, 1850],
+                            backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                            borderColor: '#4f46e5',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Lower Body',
+                            data: [1500, 1400, 1600, 1550, 1700, 1650, 2100],
+                            backgroundColor: 'rgba(220, 38, 38, 0.6)',
+                            borderColor: '#dc2626',
+                            borderWidth: 1
+                        }
+                    ];
+                    break;
+                case 'frequency':
+                    data = [{
+                        label: 'Workouts per Week',
+                        data: [3, 4, 3, 4, 3, 4, 3],
+                        backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                        borderColor: '#10b981',
+                        borderWidth: 1
+                    }];
+                    break;
+                default:
+                    data = [{
+                        label: 'Upper Body Volume (kg)',
+                        data: [1200, 1350, 1100, 1400, 1300, 1250, 1850],
+                        backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                        borderColor: '#4f46e5',
+                        borderWidth: 1
+                    }];
+            }
+            workoutProgressChart.data.datasets = data;
+            workoutProgressChart.update();
+            // Update active tab
+            document.querySelectorAll('#workout .tabs-boxed a').forEach(tab => {
+                tab.classList.remove('tab-active');
+            });
+            element.classList.add('tab-active');
+        }
+        // Dashboard Chart
+        function initDashboardChart() {
+            const ctx = document.getElementById('weightChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jul 1', 'Jul 3', 'Jul 5', 'Jul 8', 'Jul 10', 'Jul 12', 'Jul 15'],
+                    datasets: [{
+                        label: 'Weight (kg)',
+                        data: [76.5, 76.3, 76.1, 75.8, 75.5, 75.5, 75.2],
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        }
+        // Form handling
+        document.getElementById('healthForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Health measurement saved successfully!');
+            resetHealthForm();
+        });
+        document.getElementById('workoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Workout logged successfully!');
+            resetWorkoutForm();
+        });
+        document.getElementById('exerciseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Exercise added successfully!');
+            document.getElementById('addExerciseModal').checked = false;
+            resetExerciseForm();
+        });
+        function resetHealthForm() {
+            document.getElementById('healthForm').reset();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('healthDate').value = today;
+        }
+        function resetWorkoutForm() {
+            document.getElementById('workoutForm').reset();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('workoutDate').value = today;
+            loadExercises(); // Reset exercises
+        }
+        function resetExerciseForm() {
+            document.getElementById('exerciseForm').reset();
+        }
+        // Exercise management
+        function loadExercises() {
+            const routine = document.getElementById('routine').value;
+            const container = document.getElementById('exercisesContainer');
+            container.innerHTML = '';
+            let exercises = [];
+            switch(routine) {
+                case 'upper':
+                    exercises = ['Bench Press', 'Overhead Press', 'Pull Up', 'Bent Over Row', 'Lateral Raise', 'Bicep Curl'];
+                    break;
+                case 'lower':
+                    exercises = ['Barbell Squat', 'Deadlift', 'Leg Press', 'Leg Curl', 'Leg Extension', 'Calf Raise', 'Hip Thrust'];
+                    break;
+                case 'full':
+                    exercises = ['Barbell Squat', 'Bench Press', 'Deadlift', 'Overhead Press', 'Pull Up', 'Bent Over Row'];
+                    break;
+                case 'push':
+                    exercises = ['Bench Press', 'Overhead Press', 'Incline Press', 'Lateral Raise', 'Tricep Extension', 'Chest Fly'];
+                    break;
+                case 'pull':
+                    exercises = ['Deadlift', 'Pull Up', 'Bent Over Row', 'Face Pull', 'Barbell Curl', 'Hammer Curl'];
+                    break;
+                case 'legs':
+                    exercises = ['Barbell Squat', 'Leg Press', 'Romanian Deadlift', 'Leg Curl', 'Leg Extension', 'Calf Raise', 'Hip Thrust'];
+                    break;
+            }
+            exercises.forEach(exercise => {
+                addExerciseToForm(exercise);
+            });
+        }
+        function addExerciseToForm(exerciseName) {
+            const container = document.getElementById('exercisesContainer');
+            const exerciseDiv = document.createElement('div');
+            exerciseDiv.className = 'exercise-group mb-6 p-4 bg-base-200 rounded-lg';
+            exerciseDiv.innerHTML = `
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-medium">${exerciseName}</h3>
+                    <button type="button" class="btn btn-ghost btn-xs" onclick="removeExercise(this)">Remove</button>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-xs">Sets</span>
+                        </label>
+                        <input type="number" class="input input-bordered input-sm" value="3" min="1">
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-xs">Reps</span>
+                        </label>
+                        <input type="number" class="input input-bordered input-sm" value="10" min="1">
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-xs">Weight (kg)</span>
+                        </label>
+                        <input type="number" class="input input-bordered input-sm" value="0" step="2.5">
+                    </div>
+                </div>
+            `;
+            container.appendChild(exerciseDiv);
+        }
+        function addExercise() {
+            const modal = document.createElement('div');
+            modal.id = 'addExerciseSelectionModal';
+            modal.className = 'modal modal-open';
+            modal.innerHTML = `
+                <div class="modal-box">
+                    <h3 class="font-bold text-lg">Add Exercise</h3>
+                    <div class="form-control mt-4">
+                        <label class="label">
+                            <span class="label-text">Exercise</span>
+                        </label>
+                        <select id="exerciseSelection" class="select select-bordered">
+                            <option disabled selected>Pick an exercise</option>
+                            <option>Bench Press</option>
+                            <option>Barbell Squat</option>
+                            <option>Deadlift</option>
+                            <option>Overhead Press</option>
+                            <option>Pull Up</option>
+                            <option>Bent Over Row</option>
+                            <option>Leg Press</option>
+                            <option>Lateral Raise</option>
+                            <option>Barbell Curl</option>
+                        </select>
+                    </div>
+                    <div class="modal-action">
+                        <button class="btn btn-ghost" onclick="closeAddExerciseSelectionModal()">Cancel</button>
+                        <button class="btn btn-primary" onclick="addSelectedExercise()">Add</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        function closeAddExerciseSelectionModal() {
+            const modal = document.getElementById('addExerciseSelectionModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        function addSelectedExercise() {
+            const select = document.getElementById('exerciseSelection');
+            const selectedExercise = select.value;
+            if (selectedExercise && selectedExercise !== 'Pick an exercise') {
+                addExerciseToForm(selectedExercise);
+            }
+            closeAddExerciseSelectionModal();
+        }
+        function removeExercise(button) {
+            const exerciseGroup = button.closest('.exercise-group');
+            exerciseGroup.remove();
+        }
+        function openAddExerciseModal() {
+            document.getElementById('addExerciseModal').checked = true;
+        }
+        function openExerciseModal(exerciseId) {
+            document.getElementById('exerciseDetailModal').checked = true;
+        }
+        function editExercise(exerciseId) {
+            document.getElementById('addExerciseModal').checked = true;
+            // In a real app, we would load the exercise data into the form
+            document.getElementById('exerciseName').value = exerciseId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        }
+
+        function handleFileUpload(input) {
+            const files = input.files;
+            if (files.length > 0) {
+                const fileNames = Array.from(files).map(file => file.name).join(', ');
+                const label = input.previousElementSibling;
+                label.textContent = fileNames;
+            }
+        }
+        // Initialize charts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initDashboardChart();
+            initHealthChart();
+            initWorkoutChart();
+            loadExercises();
+            // Set default dates
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('healthDate').value = today;
+            document.getElementById('workoutDate').value = today;
+
+            const fileInputs = document.querySelectorAll('.file-upload input[type="file"]');
+            fileInputs.forEach(input => {
+                input.addEventListener('change', () => handleFileUpload(input));
+            });
+        });
+    </script>
+</body>
+</html>
